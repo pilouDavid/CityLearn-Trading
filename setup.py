@@ -18,14 +18,14 @@ def get_version():
     return VERSION_RE.search(init).group(1)
 
 setuptools.setup(
-    name='CityLearn',
+    name='CityLearn-trading',
     version=get_version(),
     author='Jose Ramon Vazquez-Canteli, Kingsley Nweye, Zoltan Nagy',
     author_email='nweye@utexas.edu',
     description='An open source OpenAI Gym environment for the implementation of Multi-Agent Reinforcement Learning (RL) for building energy coordination and demand response in cities.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/intelligent-environments-lab/CityLearn',
+    url='https://github.com/pilouDavid/CityLearn-Trading.git',
     packages=setuptools.find_packages(),
     include_package_data=True,
     install_requires=requirements,
