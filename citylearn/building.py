@@ -3,11 +3,14 @@ from gym import spaces
 import numpy as np
 import torch
 from citylearn.base import Environment, EpisodeTracker
-from citylearn.data import EnergySimulation, CarbonIntensity, Pricing, TOLERANCE, Weather, ZERO_DIVISION_PLACEHOLDER
+from citylearn.data import EnergySimulation, CarbonIntensity, Pricing, Weather
 from citylearn.dynamics import Dynamics, LSTMDynamics
 from citylearn.energy_model import Battery, ElectricDevice, ElectricHeater, HeatPump, PV, StorageTank
 from citylearn.power_outage import PowerOutage
 from citylearn.preprocessing import Normalize, PeriodicNormalization
+
+TOLERANCE = 0.0001
+ZERO_DIVISION_PLACEHOLDER = 0.000001
 
 class Building(Environment):
     r"""Base class for building.
@@ -101,6 +104,14 @@ class Building(Environment):
         self.periodic_normalized_observation_space_limits = None
         self.observation_space = self.estimate_observation_space(include_all=False, normalize=False)
         self.action_space = self.estimate_action_space()
+
+        # Define Trading Attribute Init
+        self.energy_offered = 0.0
+        self.energy_requested = 0.0
+        self.energy_trade_price = 0.0
+        self.energy_trade_status = 'NEUTRAL'  # Could be 'SELLING', 'BUYING', or 'NEUTRAL'
+        self.energy_trade_transactions = []
+        self.energy_trade_capacity = 0.0
 
     @property
     def energy_simulation(self) -> EnergySimulation:
@@ -2070,3 +2081,50 @@ class LSTMDynamicsBuilding(DynamicsBuilding):
 
         else:
             pass
+
+    # Example methods to handle energy trading 
+    def offer_energy(self, amount: float, price: float):
+
+        """Offer surplus energy for trading."""
+        self.energy_offered = amount
+        self.energy_trade_price = price
+        self.energy_trade_status = 'SELLING'
+
+        pass
+
+    def request_energy(self, amount: float, price: float):
+        """Request energy for trading."""
+
+        self.energy_requested = amount
+        self.energy_trade_price = price
+        self.energy_trade_status = 'BUYING'
+        pass
+
+
+    def execute_trade(self, amount: float, price: float, trade_partner: 'Building'):
+        """Execute an energy trade with another building."""
+        # Update the energy traded for both buildings
+        self.energy_traded = amount
+        trade_partner.energy_traded = amount
+
+        # Record the transaction
+        transaction = {
+            'type': self.energy_trade_status,
+            'from_building': self.name,
+            'to_building': trade_partner.name,
+            'amount': amount,
+            'price': price
+        }
+        self.energy_trade_transactions.append(transaction)
+        trade_partner.energy_trade_transactions.append(transaction)
+
+        # Update the status and reset the offered/requested amounts
+        self.energy_trade_status = 'NEUTRAL'
+        trade_partner.energy_trade_status = 'NEUTRAL'
+        self.energy_offered = 0.0
+        self.energy_requested = 0.0
+        trade_partner.energy_offered = 0.0
+        trade_partner.energy_requested = 0.0
+
+        # Additional logic for updating building energy balances can be added here
+        pass
