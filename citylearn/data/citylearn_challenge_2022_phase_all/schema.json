@@ -165,6 +165,9 @@
     },
     "electrical_storage": {
       "active": true
+    },
+    "trade_storage": {
+      "active": true
     }
   },
   "agent": {

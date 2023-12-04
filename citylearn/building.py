@@ -112,6 +112,7 @@ class Building(Environment):
         self.energy_trade_status = 'NEUTRAL'  # Could be 'SELLING', 'BUYING', or 'NEUTRAL'
         self.energy_trade_transactions = []
         self.energy_trade_capacity = 0.0
+        self.earning = 0.0
 
     @property
     def energy_simulation(self) -> EnergySimulation:
@@ -844,8 +845,9 @@ class Building(Environment):
     def apply_actions(self,
         cooling_device_action: float = None, heating_device_action: float = None,
         cooling_storage_action: float = None, heating_storage_action: float = None, 
-        dhw_storage_action: float = None, electrical_storage_action: float = None
-    ):
+        dhw_storage_action: float = None, electrical_storage_action: float = None,
+        trade_power_action: float = None,
+        ):
         r"""Update cooling and heating demand for next timestep and charge/discharge storage devices.
 
         The order of action execution is dependent on polarity of the storage actions. If the electrical 
@@ -870,6 +872,8 @@ class Building(Environment):
             Fraction of `dhw_storage` `capacity` to charge/discharge by.
         electrical_storage_action : float, default: 0.0
             Fraction of `electrical_storage` `capacity` to charge/discharge by.
+        trade_power_action : float, default: 0.0
+            Fraction of 'electrical_storage' 'capactity' to charge/discharge by in the context of trading.
         """
 
         cooling_device_action = np.nan if 'cooling_device' not in self.active_actions else cooling_device_action
@@ -878,6 +882,7 @@ class Building(Environment):
         heating_storage_action = 0.0 if 'heating_storage' not in self.active_actions else heating_storage_action
         dhw_storage_action = 0.0 if 'dhw_storage' not in self.active_actions else dhw_storage_action
         electrical_storage_action = 0.0 if 'electrical_storage' not in self.active_actions else electrical_storage_action
+        trade_power_action = 0.0 if 'trade_power' not in self.active_actions else trade_power_action
 
         # set action priority
         actions = {
@@ -891,6 +896,7 @@ class Building(Environment):
             'dhw_storage': (self.update_dhw_storage, (dhw_storage_action,)),
             'non_shiftable_load': (self.update_non_shiftable_load, ()),
             'electrical_storage': (self.update_electrical_storage, (electrical_storage_action,)),
+            'trade_power': (self.update_trade_storage, (trade_power_action,)),
         }
         priority_list = list(actions.keys())
 
@@ -924,6 +930,14 @@ class Building(Environment):
                 pass
 
         self.update_variables()
+
+    def update_trade_storage(self, action: float):
+        """Update Storage when trading power"""
+
+        energy = min(action*self.electrical_storage.capacity, self.downward_electrical_flexibility)
+        self.electrical_storage.charge(energy, trade=True)
+
+        raise NotImplementedError
 
     def update_cooling_demand(self, action: float):
         """Update space cooling demand for current time step."""
@@ -2098,6 +2112,7 @@ class LSTMDynamicsBuilding(DynamicsBuilding):
         self.energy_requested = amount
         self.energy_trade_price = price
         self.energy_trade_status = 'BUYING'
+
         pass
 
 
