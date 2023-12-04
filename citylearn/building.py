@@ -847,7 +847,7 @@ class Building(Environment):
         cooling_device_action: float = None, heating_device_action: float = None,
         cooling_storage_action: float = None, heating_storage_action: float = None, 
         dhw_storage_action: float = None, electrical_storage_action: float = None,
-        trade_power_action: float = None,
+        trade_storage_action: float = None,
         ):
         r"""Update cooling and heating demand for next timestep and charge/discharge storage devices.
 
@@ -883,7 +883,7 @@ class Building(Environment):
         heating_storage_action = 0.0 if 'heating_storage' not in self.active_actions else heating_storage_action
         dhw_storage_action = 0.0 if 'dhw_storage' not in self.active_actions else dhw_storage_action
         electrical_storage_action = 0.0 if 'electrical_storage' not in self.active_actions else electrical_storage_action
-        trade_power_action = 0.0 if 'trade_storage' not in self.active_actions else trade_power_action
+        trade_storage_action = 0.0 if 'trade_storage' not in self.active_actions else trade_storage_action
 
         # set action priority
         actions = {
@@ -897,7 +897,7 @@ class Building(Environment):
             'dhw_storage': (self.update_dhw_storage, (dhw_storage_action,)),
             'non_shiftable_load': (self.update_non_shiftable_load, ()),
             'electrical_storage': (self.update_electrical_storage, (electrical_storage_action,)),
-            'trade_power': (self.update_trade_storage, (trade_power_action,)),
+            'trade_power': (self.update_trade_storage, (trade_storage_action,)),
         }
         priority_list = list(actions.keys())
 
