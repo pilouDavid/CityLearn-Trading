@@ -112,7 +112,7 @@ class Building(Environment):
         self.energy_trade_status = 'NEUTRAL'  # Could be 'SELLING', 'BUYING', or 'NEUTRAL'
         self.energy_trade_transactions = []
         self.energy_trade_capacity = 0.0
-        self.earning = 0.0
+        self.trade_earning = 0.0
         self.test = 0.0
 
     @property
@@ -883,7 +883,7 @@ class Building(Environment):
         heating_storage_action = 0.0 if 'heating_storage' not in self.active_actions else heating_storage_action
         dhw_storage_action = 0.0 if 'dhw_storage' not in self.active_actions else dhw_storage_action
         electrical_storage_action = 0.0 if 'electrical_storage' not in self.active_actions else electrical_storage_action
-        trade_power_action = 0.0 if 'trade_power' not in self.active_actions else trade_power_action
+        trade_power_action = 0.0 if 'trade_storage' not in self.active_actions else trade_power_action
 
         # set action priority
         actions = {
@@ -938,7 +938,10 @@ class Building(Environment):
         energy = min(action*self.electrical_storage.capacity, self.downward_electrical_flexibility)
         self.electrical_storage.charge(energy, trade=True)
 
-        raise NotImplementedError
+        if action < 0.0:
+            self.trade_earning += action*self.electrical_storage.capacity*self.pricing.electricity_pricing[self.time_step]
+        else:
+            self.trade_earning -= action*self.electrical_storage.capacity*self.pricing.electricity_pricing[self.time_step]
 
     def update_cooling_demand(self, action: float):
         """Update space cooling demand for current time step."""
