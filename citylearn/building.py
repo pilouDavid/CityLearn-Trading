@@ -1367,7 +1367,12 @@ class Building(Environment):
                 limit = self.electrical_storage.nominal_power/max(self.electrical_storage.capacity, ZERO_DIVISION_PLACEHOLDER)
                 low_limit.append(-limit)
                 high_limit.append(limit)
-            
+
+            elif key == 'trade_storage':
+                limit = self.electrical_storage.nominal_power/max(self.electrical_storage.capacity, ZERO_DIVISION_PLACEHOLDER)
+                low_limit.append(-limit)
+                high_limit.append(limit)
+
             else:
                 if key == 'cooling_storage':
                     capacity = self.cooling_storage.capacity
