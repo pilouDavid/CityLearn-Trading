@@ -113,6 +113,7 @@ class Building(Environment):
         self.energy_trade_transactions = []
         self.energy_trade_capacity = 0.0
         self.earning = 0.0
+        self.test = 0.0
 
     @property
     def energy_simulation(self) -> EnergySimulation:
