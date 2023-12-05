@@ -849,6 +849,7 @@ class Battery(StorageDevice, ElectricDevice):
         super().charge(energy)
         degraded_capacity = max(self.degraded_capacity - self.degrade(), 0.0)
         self._capacity_history.append(degraded_capacity)
+        
         if not trade:
             self.update_electricity_consumption(self.energy_balance[self.time_step], enforce_polarity=False)
 

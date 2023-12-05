@@ -943,6 +943,7 @@ class CityLearnEnv(Environment, Env):
         get_net_electricity_consumption = lambda x, c: getattr(x, f'net_electricity_consumption{c.value}')
         get_net_electricity_consumption_cost = lambda x, c: getattr(x, f'net_electricity_consumption_cost{c.value}')
         get_net_electricity_consumption_emission = lambda x, c: getattr(x, f'net_electricity_consumption_emission{c.value}')
+        get_net_trading_earning = lambda x, c: getattr(x, f'net_trading_earning{c.value}')
 
         comfort_band = 2.0 if comfort_band is None else comfort_band
         building_level = []
@@ -1013,7 +1014,11 @@ class CityLearnEnv(Environment, Env):
             }, {
                 'cost_function': 'annual_normalized_unserved_energy_total',
                 'value': CostFunction.normalized_unserved_energy(expected_energy, served_energy)[-1]
-            }])
+            }, {
+                'cost_function': 'trade_earning',
+                'value': b.trade_earning,
+            }
+            ])
             building_level_['name'] = b.name
             building_level.append(building_level_)
 
