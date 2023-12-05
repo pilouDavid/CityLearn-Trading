@@ -939,7 +939,7 @@ class Building(Environment):
         self.electrical_storage.charge(energy, trade=True)
 
         if action < 0.0:
-            self.trade_earning += action*self.electrical_storage.capacity*self.pricing.electricity_pricing[self.time_step]
+            self.trade_earning += -action*self.electrical_storage.capacity*self.pricing.electricity_pricing[self.time_step]
         else:
             self.trade_earning -= action*self.electrical_storage.capacity*self.pricing.electricity_pricing[self.time_step]
 

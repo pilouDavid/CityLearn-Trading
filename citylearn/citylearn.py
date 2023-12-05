@@ -1016,7 +1016,7 @@ class CityLearnEnv(Environment, Env):
                 'value': CostFunction.normalized_unserved_energy(expected_energy, served_energy)[-1],
             }, {
                 'cost_function': 'trade_earning',
-                'value': b.trade_earning if b.trade_earning else 10,
+                'value': b.trade_earning if b.trade_earning else 0,
             }
             ])
             building_level_['name'] = b.name
