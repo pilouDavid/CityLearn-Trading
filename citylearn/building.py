@@ -1600,7 +1600,6 @@ class Building(Environment):
         self.dhw_device.reset()
         self.non_shiftable_load_device.reset()
         self.pv.reset()
-        self.trade_earning.reset()
 
         # variable reset
         self.reset_dynamic_variables()
