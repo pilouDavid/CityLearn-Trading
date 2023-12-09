@@ -17,3 +17,16 @@ pip install CityLearn
 
 ## Documentation
 Refer to the [docs](https://intelligent-environments-lab.github.io/CityLearn/) for documentation of the CityLearn API.
+
+## Trading Environment Progress
+The aim of this forked package is to allow power trading behavior for Buildings class. 
+This is composed of multiple steps ordered in increasing order of difficulty :
+
+* ✅ Allow Building class to trade with the grid (buy and sell power stored in Battery class)
+* ✅ Define new KPIs including new behavior (trade earning)
+* ✅ Train RL model (SAC & Q-Learning) on new trade actions and observe improvements
+* ❌ Allow Building class to trade between each other
+* ❌ Transform Environment in order to share information about Buildings will to buy/sell power between each other
+* ❌ Build Price Agreement rules to exchange power between 2 (or more) Buildings
+* ❌ Train RL model with building able to trade between each other 
+
