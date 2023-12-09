@@ -939,9 +939,9 @@ class Building(Environment):
         self.electrical_storage.charge(energy, trade=True)
 
         if action < 0.0:
-            self.trade_earning += -action*self.electrical_storage.capacity*self.pricing.electricity_pricing[self.time_step]
+            self.trade_earning += abs(action)*self.electrical_storage.capacity*self.pricing.electricity_pricing[self.time_step]
         else:
-            self.trade_earning -= action*self.electrical_storage.capacity*self.pricing.electricity_pricing[self.time_step]
+            self.trade_earning -= abs(action)*self.electrical_storage.capacity*self.pricing.electricity_pricing[self.time_step]
 
     def update_cooling_demand(self, action: float):
         """Update space cooling demand for current time step."""
@@ -1599,6 +1599,7 @@ class Building(Environment):
         self.dhw_device.reset()
         self.non_shiftable_load_device.reset()
         self.pv.reset()
+        self.trade_earning.reset()
 
         # variable reset
         self.reset_dynamic_variables()
