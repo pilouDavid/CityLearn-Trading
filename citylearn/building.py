@@ -325,7 +325,7 @@ class Building(Environment):
     
     @property
     def net_trading_earning(self) -> np.ndarray:
-        """Net electricity consumption time series, in [kWh]."""
+        """Net electricity trading time series, in [kWh]."""
 
         return self.__net_trade_earning[:self.time_step + 1]
 
@@ -1727,7 +1727,6 @@ class Building(Environment):
 
         if net_trade_energy < 0.0:
             net_trade_earning = abs(net_trade_energy)*self.pricing.electricity_pricing[self.time_step]
-            print(net_trade_earning)
         else:
             net_trade_earning = -abs(net_trade_energy)*self.pricing.electricity_pricing[self.time_step]
 

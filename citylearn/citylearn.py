@@ -546,6 +546,12 @@ class CityLearnEnv(Environment, Env):
         """Summed `Building.net_electricity_consumption` time series, in [kWh]."""
 
         return self.__net_electricity_consumption
+    
+    @property
+    def net_trade_earning(self) -> List[float]:
+        """Summed `Building.net_trade_earning` time series, in [kWh]."""
+
+        return self.__net_trade_earning
 
     @property
     def cooling_electricity_consumption(self) -> np.ndarray:
@@ -1020,6 +1026,7 @@ class CityLearnEnv(Environment, Env):
             }
             ])
             building_level_['name'] = b.name
+            print(building_level_)
             building_level.append(building_level_)
 
         building_level = pd.concat(building_level, ignore_index=True)
@@ -1172,7 +1179,7 @@ class CityLearnEnv(Environment, Env):
         self.__net_electricity_consumption_emission.append(sum([b.net_electricity_consumption_emission[self.time_step] for b in self.buildings]))
 
         # net trade earning
-        self.__net_trade_earning.append(sum([b.net_electricity_consumption_emission[self.time_step] for b in self.buildings]))
+        self.__net_trade_earning.append(sum([b.net_trading_earning[self.time_step] for b in self.buildings]))
 
     def load_agent(self) -> 'citylearn.agents.base.Agent':
         """Return :class:`Agent` or sub class object as defined by the `schema`.
