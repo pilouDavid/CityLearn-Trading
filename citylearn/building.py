@@ -112,7 +112,6 @@ class Building(Environment):
         self.energy_trade_status = 'NEUTRAL'  # Could be 'SELLING', 'BUYING', or 'NEUTRAL'
         self.energy_trade_transactions = []
         self.energy_trade_capacity = 0.0
-        self.trade_earning = 0.0
         self.test = 0.0
 
     @property
