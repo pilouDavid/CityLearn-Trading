@@ -127,7 +127,6 @@ class CostFunction:
 
         data = pd.DataFrame({'net_trade_earning':np.array(net_trade_earning)})
         data['trade_earning'] = data['net_trade_earning'].rolling(window=data.shape[0],min_periods=1).sum()
-        print(data)
         return data['trade_earning'].tolist()
 
     @staticmethod
