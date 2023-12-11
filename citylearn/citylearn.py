@@ -1026,7 +1026,6 @@ class CityLearnEnv(Environment, Env):
             }
             ])
             building_level_['name'] = b.name
-            print(building_level_)
             building_level.append(building_level_)
 
         building_level = pd.concat(building_level, ignore_index=True)
