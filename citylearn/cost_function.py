@@ -107,6 +107,28 @@ class CostFunction:
         data['electricity_consumption'] = data['net_electricity_consumption'].rolling(window=data.shape[0],min_periods=1).sum()
         
         return data['electricity_consumption'].tolist()
+    
+    @staticmethod
+    def trade_earning(net_trade_earning: List[float]) -> List[float]:
+        r"""Rolling sum of positive electricity consumption.
+
+        It is the sum of electricity that is consumed from the grid.
+
+        Parameters
+        ----------
+        net_electricity_consumption : List[float]
+            Electricity consumption time series.
+            
+        Returns
+        -------
+        electricity_consumption : List[float]
+            Electricity consumption cost.
+        """
+
+        data = pd.DataFrame({'net_trade_earning':np.array(net_trade_earning).clip(min=0)})
+        data['trade_earning'] = data['net_trade_earning'].rolling(window=data.shape[0],min_periods=1).sum()
+        
+        return data['trade_earning'].tolist()
 
     @staticmethod
     def zero_net_energy(net_electricity_consumption: List[float]) -> List[float]:

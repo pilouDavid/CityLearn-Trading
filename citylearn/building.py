@@ -323,6 +323,12 @@ class Building(Environment):
         """Net electricity consumption time series, in [kWh]."""
 
         return self.__net_electricity_consumption[:self.time_step + 1]
+    
+    @property
+    def net_trading_earning(self) -> np.ndarray:
+        """Net electricity consumption time series, in [kWh]."""
+
+        return self.__net_trade_earning[:self.time_step + 1]
 
     @property
     def cooling_electricity_consumption(self) -> np.ndarray:
@@ -938,11 +944,7 @@ class Building(Environment):
         energy = min(action*self.electrical_storage.capacity, self.downward_electrical_flexibility)
         self.electrical_storage.charge(energy, trade=True)
 
-        if action < 0.0:
-            self.trade_earning += abs(energy)*self.pricing.electricity_pricing[self.time_step]
-            print(self.trade_earning)
-        else:
-            self.trade_earning -= abs(energy)*self.pricing.electricity_pricing[self.time_step]
+        self.electrical_storage.trade(energy)
 
     def update_cooling_demand(self, action: float):
         """Update space cooling demand for current time step."""
@@ -1612,6 +1614,7 @@ class Building(Environment):
         self.__net_electricity_consumption = np.zeros(self.episode_tracker.episode_time_steps, dtype='float32')
         self.__net_electricity_consumption_emission = np.zeros(self.episode_tracker.episode_time_steps, dtype='float32')
         self.__net_electricity_consumption_cost = np.zeros(self.episode_tracker.episode_time_steps, dtype='float32')
+        self.__net_trade_earning = np.zeros(self.episode_tracker.episode_time_steps, dtype='float32')
         self.__power_outage_signal = self.reset_power_outage_signal()
         self.update_variables()
 
@@ -1708,6 +1711,8 @@ class Building(Environment):
 
         # net electricity consumption
         net_electricity_consumption = 0.0
+        net_trade_energy = 0.0
+        net_trade_earning = 0.0
 
         if not self.power_outage:
             net_electricity_consumption = self.cooling_device.electricity_consumption[self.time_step] \
@@ -1718,6 +1723,16 @@ class Building(Environment):
                                 + self.solar_generation[self.time_step]
         else:
             pass
+
+        net_trade_energy = self.electrical_storage.trade_energy[self.time_step]
+
+        if net_trade_energy < 0.0:
+            net_trade_earning = abs(net_trade_energy)*self.pricing.electricity_pricing[self.time_step]
+            print(net_trade_earning)
+        else:
+            net_trade_earning = -abs(net_trade_energy)*self.pricing.electricity_pricing[self.time_step]
+
+        self.__net_trade_earning[self.time_step] = net_trade_earning
 
         self.__net_electricity_consumption[self.time_step] = net_electricity_consumption
 

@@ -943,7 +943,7 @@ class CityLearnEnv(Environment, Env):
         get_net_electricity_consumption = lambda x, c: getattr(x, f'net_electricity_consumption{c.value}')
         get_net_electricity_consumption_cost = lambda x, c: getattr(x, f'net_electricity_consumption_cost{c.value}')
         get_net_electricity_consumption_emission = lambda x, c: getattr(x, f'net_electricity_consumption_emission{c.value}')
-        get_net_trading_earning = lambda x, c: getattr(x, f'net_trading_earning{c.value}')
+        get_net_trading_earning = lambda x, c: getattr(x, f'net_trading_earning')
 
         comfort_band = 2.0 if comfort_band is None else comfort_band
         building_level = []
@@ -1016,7 +1016,7 @@ class CityLearnEnv(Environment, Env):
                 'value': CostFunction.normalized_unserved_energy(expected_energy, served_energy)[-1],
             }, {
                 'cost_function': 'trade_earning',
-                'value': b.trade_earning if b.trade_earning else 0,
+                'value': CostFunction.trade_earning(get_net_trading_earning(b, control_condition))[-1],
             }
             ])
             building_level_['name'] = b.name
@@ -1156,6 +1156,7 @@ class CityLearnEnv(Environment, Env):
         self.__net_electricity_consumption = []
         self.__net_electricity_consumption_cost = []
         self.__net_electricity_consumption_emission = []
+        self.__net_trade_earning = []
         self.update_variables()
 
         return self.observations
@@ -1169,6 +1170,9 @@ class CityLearnEnv(Environment, Env):
 
         # net electriciy consumption emission
         self.__net_electricity_consumption_emission.append(sum([b.net_electricity_consumption_emission[self.time_step] for b in self.buildings]))
+
+        # net trade earning
+        self.__net_trade_earning.append(sum([b.net_electricity_consumption_emission[self.time_step] for b in self.buildings]))
 
     def load_agent(self) -> 'citylearn.agents.base.Agent':
         """Return :class:`Agent` or sub class object as defined by the `schema`.

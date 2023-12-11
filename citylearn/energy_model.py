@@ -71,6 +71,12 @@ class ElectricDevice(Device):
         r"""Electricity consumption time series [kWh]."""
 
         return self.__electricity_consumption
+    
+    @property
+    def trade_energy(self) -> np.ndarray:
+        r"""Trade Earning time series [$]"""
+
+        return self.__trade_energy
 
     @property
     def available_nominal_power(self) -> float:
@@ -108,11 +114,22 @@ class ElectricDevice(Device):
             f'electricity_consumption must be >= 0 but value: {electricity_consumption} was provided.'
         self.__electricity_consumption[self.time_step] += electricity_consumption
 
+    def update_trade_energy(self, trade_energy: float):
+        r"""Updates `trade_earning` at current `time_step`.
+        
+        Parameters
+        ----------
+        trade_earning: float
+            Value to add to current `time_step` `trade_earning`. 
+        """
+        self.__trade_energy[self.time_step] += trade_energy
+
     def reset(self):
         r"""Reset `ElectricDevice` to initial state and set `electricity_consumption` at `time_step` 0 to = 0.0."""
 
         super().reset()
         self.__electricity_consumption = np.zeros(self.episode_tracker.episode_time_steps, dtype='float32')
+        self.__trade_energy = np.zeros(self.episode_tracker.episode_time_steps, dtype='float32')
 
 class HeatPump(ElectricDevice):
     r"""Base heat pump class.
@@ -852,6 +869,16 @@ class Battery(StorageDevice, ElectricDevice):
         
         if not trade:
             self.update_electricity_consumption(self.energy_balance[self.time_step], enforce_polarity=False)
+
+    def trade(self, energy: float):
+        """Trade energy
+        Parameters
+        ----------
+        earning : float
+            Earning buy if (+) or sell if (-) in [kWh].
+        """
+        
+        self.update_trade_energy(energy)
 
     def get_max_output_power(self) -> float:
         r"""Get maximum output power while considering `capacity_power_curve` limitations if defined otherwise, returns `nominal_power`.
