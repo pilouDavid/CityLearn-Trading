@@ -941,7 +941,6 @@ class Building(Environment):
         """Update Storage when trading power"""
 
         energy = min(action*self.electrical_storage.capacity, self.downward_electrical_flexibility)
-        self.electrical_storage.charge(energy, trade=True)
 
         self.electrical_storage.trade(energy)
 

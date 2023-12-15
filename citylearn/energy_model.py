@@ -841,7 +841,7 @@ class Battery(StorageDevice, ElectricDevice):
             'capacity_power_curve': self.capacity_power_curve,
         }
 
-    def charge(self, energy: float, trade=None):
+    def charge(self, energy: float):
         """Charges or discharges storage with respect to specified energy while considering `capacity` degradation and `soc_init` 
         limitations, losses to the environment quantified by `efficiency`, `power_efficiency_curve` and `capacity_power_curve`.
 
@@ -867,8 +867,7 @@ class Battery(StorageDevice, ElectricDevice):
         degraded_capacity = max(self.degraded_capacity - self.degrade(), 0.0)
         self._capacity_history.append(degraded_capacity)
         
-        if not trade:
-            self.update_electricity_consumption(self.energy_balance[self.time_step], enforce_polarity=False)
+        self.update_electricity_consumption(self.energy_balance[self.time_step], enforce_polarity=False)
 
     def trade(self, energy: float):
         """Trade energy
@@ -877,8 +876,20 @@ class Battery(StorageDevice, ElectricDevice):
         earning : float
             Earning buy if (+) or sell if (-) in [kWh].
         """
-        super().charge(energy)
+        if energy >= 0:
+            energy_wrt_degrade = self.degraded_capacity - self.energy_init
+            energy = min(self.get_max_input_power(), self.available_nominal_power, energy_wrt_degrade, energy)
 
+        else:
+            soc_limit_wrt_dod = 1.0 - self.depth_of_discharge
+            soc_init = self.soc[self.time_step - 1]
+            soc_difference = soc_init - soc_limit_wrt_dod
+            energy_limit_wrt_dod = max(soc_difference*self.capacity*self.round_trip_efficiency, 0.0)*-1
+            energy = max(-self.get_max_output_power(), energy_limit_wrt_dod, energy)
+        
+        super().charge(energy)
+        degraded_capacity = max(self.degraded_capacity - self.degrade(), 0.0)
+        self._capacity_history.append(degraded_capacity)
         self.update_trade_energy(self.energy_balance[self.time_step])
 
     def get_max_output_power(self) -> float:
