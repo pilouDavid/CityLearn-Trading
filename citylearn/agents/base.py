@@ -152,7 +152,7 @@ class Agent(Environment):
 
                 # update
                 if not deterministic:
-                    self.update(observations, actions, rewards, next_observations, done=done)
+                    self.update(observations, actions, rewards, next_observations)
                 else:
                     pass
 
