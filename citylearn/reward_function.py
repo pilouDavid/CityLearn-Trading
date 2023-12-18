@@ -55,11 +55,12 @@ class RewardFunction:
         """
 
         net_electricity_consumption = [o['net_electricity_consumption'] for o in observations]
+        net_trade_earning = [o['net_trade_earning'] for o in observations]
 
         if self.central_agent:
-            reward = [min(sum(net_electricity_consumption)*-1, 0.0)]
+            reward = [max(sum(net_trade_earning)*-1, 0.0)]
         else:
-            reward = [min(v*-1, 0.0) for v in net_electricity_consumption]
+            reward = [max(v*-1, 0.0) for v in net_trade_earning]
 
         return reward
 
