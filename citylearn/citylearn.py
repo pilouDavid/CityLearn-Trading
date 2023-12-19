@@ -949,7 +949,7 @@ class CityLearnEnv(Environment, Env):
         get_net_electricity_consumption = lambda x, c: getattr(x, f'net_electricity_consumption{c.value}')
         get_net_electricity_consumption_cost = lambda x, c: getattr(x, f'net_electricity_consumption_cost{c.value}')
         get_net_electricity_consumption_emission = lambda x, c: getattr(x, f'net_electricity_consumption_emission{c.value}')
-        get_net_trading_earning = lambda x, c: getattr(x, f'net_trading_earning')
+        get_net_trading_earning = lambda x, c: getattr(x, f'net_trade_earning')
 
         comfort_band = 2.0 if comfort_band is None else comfort_band
         building_level = []
