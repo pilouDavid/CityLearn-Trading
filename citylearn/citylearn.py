@@ -1178,7 +1178,7 @@ class CityLearnEnv(Environment, Env):
         self.__net_electricity_consumption_emission.append(sum([b.net_electricity_consumption_emission[self.time_step] for b in self.buildings]))
 
         # net trade earning
-        self.__net_trade_earning.append(sum([b.net_trading_earning[self.time_step] for b in self.buildings]))
+        self.__net_trade_earning.append(sum([b.net_trade_earning[self.time_step] for b in self.buildings]))
 
     def load_agent(self) -> 'citylearn.agents.base.Agent':
         """Return :class:`Agent` or sub class object as defined by the `schema`.
