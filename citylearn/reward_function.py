@@ -106,8 +106,20 @@ class IndependentSACReward(RewardFunction):
     def calculate(self, observations: List[Mapping[str, Union[int, float]]]) -> List[float]:
         net_electricity_consumption = [o['net_electricity_consumption'] for o in observations]
         net_trade_earning = [o['net_trade_earning'] for o in observations]
+        
+        reward_list = []
+        for consumption, earning in zip(net_electricity_consumption, net_trade_earning):
+            # Penalize high electricity consumption
+            consumption_penalty = consumption ** 3 * -1
 
-        reward_list = [max(v, 0) for v in net_trade_earning]
+            # Reward net trade earnings
+            trade_reward = earning
+
+            # Combine the two components
+            total_reward = trade_reward + consumption_penalty
+
+            # Add the combined reward to the list
+            reward_list.append(total_reward)
 
         if self.central_agent:
             reward = [sum(reward_list)]
