@@ -107,7 +107,7 @@ class IndependentSACReward(RewardFunction):
         net_electricity_consumption = [o['net_electricity_consumption'] for o in observations]
         net_trade_earning = [o['net_trade_earning'] for o in observations]
 
-        reward_list = [min(v*-1**3, 0) for v in net_trade_earning]
+        reward_list = [max(v, 0) for v in net_trade_earning]
 
         if self.central_agent:
             reward = [sum(reward_list)]
