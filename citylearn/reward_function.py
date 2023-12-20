@@ -58,9 +58,9 @@ class RewardFunction:
         net_trade_earning = [o['net_trade_earning'] for o in observations]
 
         if self.central_agent:
-            reward = [max(sum(net_trade_earning), 0.0)]
+            reward = [min(sum(net_electricity_consumption)*-1, 0.0)]
         else:
-            reward = [max(v, 0.0) for v in net_trade_earning]
+            reward = [min(v*-1, 0.0) for v in net_electricity_consumption]
 
         return reward
 
@@ -105,7 +105,9 @@ class IndependentSACReward(RewardFunction):
 
     def calculate(self, observations: List[Mapping[str, Union[int, float]]]) -> List[float]:
         net_electricity_consumption = [o['net_electricity_consumption'] for o in observations]
-        reward_list = [min(v*-1**3, 0) for v in net_electricity_consumption]
+        net_trade_earning = [o['net_trade_earning'] for o in observations]
+
+        reward_list = [min(v*-1**3, 0) for v in net_trade_earning]
 
         if self.central_agent:
             reward = [sum(reward_list)]
