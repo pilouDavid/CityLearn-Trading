@@ -703,6 +703,7 @@ class Building(Environment):
         self.heating_storage.episode_tracker = self.episode_tracker
         self.dhw_storage.episode_tracker = self.episode_tracker
         self.electrical_storage.episode_tracker = self.episode_tracker
+        self.trade_storage.episode_tracker = self.episode_tracker
         self.non_shiftable_load_device.episode_tracker = self.episode_tracker
         self.pv.episode_tracker = self.episode_tracker
 
@@ -722,6 +723,7 @@ class Building(Environment):
             'heating_storage': self.heating_storage.get_metadata(),
             'dhw_storage': self.dhw_storage.get_metadata(),
             'electrical_storage': self.electrical_storage.get_metadata(),
+            'trade_storage': self.trade_storage.get_metadata(),
             'pv': self.pv.get_metadata(),
             'annual_cooling_demand_estimate': self.energy_simulation.cooling_demand.sum()/n_years,
             'annual_heating_demand_estimate': self.energy_simulation.heating_demand.sum()/n_years,
@@ -1596,6 +1598,7 @@ class Building(Environment):
         self.heating_storage.next_time_step()
         self.dhw_storage.next_time_step()
         self.electrical_storage.next_time_step()
+        self.trade_storage.next_time_step()
         self.pv.next_time_step()
         super().next_time_step()
 
@@ -1608,6 +1611,7 @@ class Building(Environment):
         self.heating_storage.reset()
         self.dhw_storage.reset()
         self.electrical_storage.reset()
+        self.trade_storage.reset()
         self.cooling_device.reset()
         self.heating_device.reset()
         self.dhw_device.reset()
