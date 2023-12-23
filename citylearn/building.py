@@ -175,6 +175,12 @@ class Building(Environment):
         """Electric storage object for meeting electric loads."""
 
         return self.__electrical_storage
+    
+    @property
+    def trade_storage(self) -> TradingBattery:
+        """Trade storage object for meeting electric loads."""
+
+        return self.__trade_storage
 
     @property
     def dhw_device(self) -> Union[HeatPump, ElectricHeater]:
@@ -636,6 +642,10 @@ class Building(Environment):
     @electrical_storage.setter
     def electrical_storage(self, electrical_storage: Battery):
         self.__electrical_storage = Battery(0.0, 0.0) if electrical_storage is None else electrical_storage
+
+    @trade_storage.setter
+    def trade_storage(self, trade_storage: TradingBattery):
+        self.__trade_storage = TradingBattery(0.0, 0.0) if trade_storage is None else trade_storage
 
     @dhw_device.setter
     def dhw_device(self, dhw_device: Union[HeatPump, ElectricHeater]):
