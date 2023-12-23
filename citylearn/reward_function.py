@@ -113,7 +113,7 @@ class IndependentSACReward(RewardFunction):
             consumption_penalty = consumption ** 3 * -1
 
             # Reward net trade earnings
-            trade_reward = earning
+            trade_reward = earning ** 3 
 
             # Combine the two components
             total_reward = trade_reward + consumption_penalty
