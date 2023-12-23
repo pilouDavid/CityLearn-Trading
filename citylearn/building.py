@@ -5,7 +5,7 @@ import torch
 from citylearn.base import Environment, EpisodeTracker
 from citylearn.data import EnergySimulation, CarbonIntensity, Pricing, Weather
 from citylearn.dynamics import Dynamics, LSTMDynamics
-from citylearn.energy_model import Battery, ElectricDevice, ElectricHeater, HeatPump, PV, StorageTank
+from citylearn.energy_model import Battery, ElectricDevice, ElectricHeater, HeatPump, PV, StorageTank, TradingBattery
 from citylearn.power_outage import PowerOutage
 from citylearn.preprocessing import Normalize, PeriodicNormalization
 
@@ -71,13 +71,15 @@ class Building(Environment):
         self, energy_simulation: EnergySimulation, weather: Weather, observation_metadata: Mapping[str, bool], action_metadata: Mapping[str, bool], episode_tracker: EpisodeTracker, carbon_intensity: CarbonIntensity = None, 
         pricing: Pricing = None, dhw_storage: StorageTank = None, cooling_storage: StorageTank = None, heating_storage: StorageTank = None, electrical_storage: Battery = None, 
         dhw_device: Union[HeatPump, ElectricHeater] = None, cooling_device: HeatPump = None, heating_device: Union[HeatPump, ElectricHeater] = None, pv: PV = None, name: str = None,
-        maximum_temperature_delta: float = None, simulate_power_outage: bool = None, stochastic_power_outage: bool = None, stochastic_power_outage_model: PowerOutage = None, **kwargs: Any
-    ):  
+        maximum_temperature_delta: float = None, simulate_power_outage: bool = None, stochastic_power_outage: bool = None, stochastic_power_outage_model: PowerOutage = None,
+        trade_storage: TradingBattery = None,**kwargs: Any
+        ):  
         self.name = name
         self.dhw_storage = dhw_storage
         self.cooling_storage = cooling_storage
         self.heating_storage = heating_storage
         self.electrical_storage = electrical_storage
+        self.trade_storage = trade_storage
         self.dhw_device = dhw_device
         self.cooling_device = cooling_device
         self.heating_device = heating_device
@@ -943,7 +945,7 @@ class Building(Environment):
 
         energy = min(action*self.electrical_storage.capacity, self.downward_electrical_flexibility)
 
-        self.electrical_storage.trade(energy)
+        self.trade_storage.trade(energy)
 
     def update_cooling_demand(self, action: float):
         """Update space cooling demand for current time step."""
@@ -1723,7 +1725,7 @@ class Building(Environment):
         else:
             pass
 
-        net_trade_energy = self.electrical_storage.trade_energy[self.time_step]
+        net_trade_energy = self.trade_storage.trade_energy[self.time_step]
 
         if net_trade_energy < 0.0:
             net_trade_earning = abs(net_trade_energy)*self.pricing.electricity_pricing[self.time_step]

@@ -869,29 +869,6 @@ class Battery(StorageDevice, ElectricDevice):
         
         self.update_electricity_consumption(self.energy_balance[self.time_step], enforce_polarity=False)
 
-    def trade(self, energy: float):
-        """Trade energy
-        Parameters
-        ----------
-        earning : float
-            Earning buy if (+) or sell if (-) in [kWh].
-        """
-        if energy >= 0:
-            energy_wrt_degrade = self.degraded_capacity - self.energy_init
-            energy = min(self.get_max_input_power(), self.available_nominal_power, energy_wrt_degrade, energy)
-
-        else:
-            soc_limit_wrt_dod = 1.0 - self.depth_of_discharge
-            soc_init = self.soc[self.time_step - 1]
-            soc_difference = soc_init - soc_limit_wrt_dod
-            energy_limit_wrt_dod = max(soc_difference*self.capacity*self.round_trip_efficiency, 0.0)*-1
-            energy = max(-self.get_max_output_power(), energy_limit_wrt_dod, energy)
-        
-        #super().charge(energy)
-        #degraded_capacity = max(self.degraded_capacity - self.degrade(), 0.0)
-        #self._capacity_history.append(degraded_capacity)
-        self.update_trade_energy(energy)
-
     def get_max_output_power(self) -> float:
         r"""Get maximum output power while considering `capacity_power_curve` limitations if defined otherwise, returns `nominal_power`.
 
@@ -968,3 +945,31 @@ class Battery(StorageDevice, ElectricDevice):
         super().reset()
         self._efficiency_history = self._efficiency_history[0:1]
         self._capacity_history = self._capacity_history[0:1]
+
+class TradingBattery(Battery):
+
+    def __init__(self, capacity: float = None, nominal_power: float = None, capacity_loss_coefficient: float = None, power_efficiency_curve: List[List[float]] = None, capacity_power_curve: List[List[float]] = None, depth_of_discharge: float = None, **kwargs: Any):
+        super().__init__(capacity, nominal_power, capacity_loss_coefficient, power_efficiency_curve, capacity_power_curve, depth_of_discharge, **kwargs)
+
+    def trade(self, energy: float):
+        """Trade energy
+        Parameters
+        ----------
+        earning : float
+            Earning buy if (+) or sell if (-) in [kWh].
+        """
+        if energy >= 0:
+            energy_wrt_degrade = self.degraded_capacity - self.energy_init
+            energy = min(self.get_max_input_power(), self.available_nominal_power, energy_wrt_degrade, energy)
+
+        else:
+            soc_limit_wrt_dod = 1.0 - self.depth_of_discharge
+            soc_init = self.soc[self.time_step - 1]
+            soc_difference = soc_init - soc_limit_wrt_dod
+            energy_limit_wrt_dod = max(soc_difference*self.capacity*self.round_trip_efficiency, 0.0)*-1
+            energy = max(-self.get_max_output_power(), energy_limit_wrt_dod, energy)
+        
+        super().charge(energy)
+        degraded_capacity = max(self.degraded_capacity - self.degrade(), 0.0)
+        self._capacity_history.append(degraded_capacity)
+        self.update_trade_energy(energy)
