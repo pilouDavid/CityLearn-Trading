@@ -586,7 +586,7 @@ class StorageDevice(Device):
         
         # The initial State Of Charge (SOC) is the previous SOC minus the energy losses
         energy_final = min(self.energy_init + energy*self.round_trip_efficiency, self.capacity) if energy >= 0\
-            else self.energy_init + energy/self.round_trip_efficiency
+            else max(0.0, self.energy_init + energy/self.round_trip_efficiency)
         self.__soc[self.time_step] = energy_final/max(self.capacity, ZERO_DIVISION_PLACEHOLDER)
         self.__energy_balance[self.time_step] = self.set_energy_balance(energy_final)
 
@@ -887,10 +887,10 @@ class Battery(StorageDevice, ElectricDevice):
             energy_limit_wrt_dod = max(soc_difference*self.capacity*self.round_trip_efficiency, 0.0)*-1
             energy = max(-self.get_max_output_power(), energy_limit_wrt_dod, energy)
         
-        super().charge(energy)
-        degraded_capacity = max(self.degraded_capacity - self.degrade(), 0.0)
-        self._capacity_history.append(degraded_capacity)
-        self.update_trade_energy(self.energy_balance[self.time_step])
+        #super().charge(energy)
+        #degraded_capacity = max(self.degraded_capacity - self.degrade(), 0.0)
+        #self._capacity_history.append(degraded_capacity)
+        self.update_trade_energy(energy)
 
     def get_max_output_power(self) -> float:
         r"""Get maximum output power while considering `capacity_power_curve` limitations if defined otherwise, returns `nominal_power`.
