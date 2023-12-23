@@ -72,7 +72,7 @@ class Building(Environment):
         pricing: Pricing = None, dhw_storage: StorageTank = None, cooling_storage: StorageTank = None, heating_storage: StorageTank = None, electrical_storage: Battery = None, 
         dhw_device: Union[HeatPump, ElectricHeater] = None, cooling_device: HeatPump = None, heating_device: Union[HeatPump, ElectricHeater] = None, pv: PV = None, name: str = None,
         maximum_temperature_delta: float = None, simulate_power_outage: bool = None, stochastic_power_outage: bool = None, stochastic_power_outage_model: PowerOutage = None,
-        trade_storage: TradingBattery = None,**kwargs: Any
+        trade_storage: TradingBattery = None, **kwargs: Any
         ):  
         self.name = name
         self.dhw_storage = dhw_storage
