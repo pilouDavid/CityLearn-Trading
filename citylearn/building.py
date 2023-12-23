@@ -1740,6 +1740,7 @@ class Building(Environment):
             pass
 
         net_trade_energy = self.trade_storage.trade_energy[self.time_step]
+        print(net_trade_energy)
 
         if net_trade_energy < 0.0:
             net_trade_earning = abs(net_trade_energy)*self.pricing.electricity_pricing[self.time_step]
