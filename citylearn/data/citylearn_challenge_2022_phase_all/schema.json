@@ -167,7 +167,7 @@
       "active": true
     },
     "trade_storage": {
-      "active": false
+      "active": true
     }
   },
   "agent": {
