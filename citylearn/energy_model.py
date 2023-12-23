@@ -946,10 +946,17 @@ class Battery(StorageDevice, ElectricDevice):
         self._efficiency_history = self._efficiency_history[0:1]
         self._capacity_history = self._capacity_history[0:1]
 
-class TradingBattery(Battery):
+class TradingBattery(StorageDevice, ElectricDevice):
 
     def __init__(self, capacity: float = None, nominal_power: float = None, capacity_loss_coefficient: float = None, power_efficiency_curve: List[List[float]] = None, capacity_power_curve: List[List[float]] = None, depth_of_discharge: float = None, **kwargs: Any):
-        super().__init__(capacity, nominal_power, capacity_loss_coefficient, power_efficiency_curve, capacity_power_curve, depth_of_discharge, **kwargs)
+        self._efficiency_history = []
+        self._capacity_history = []
+        self.depth_of_discharge = depth_of_discharge
+        super().__init__(capacity=capacity, nominal_power=nominal_power, **kwargs)
+        self._capacity_history = [self.capacity]
+        self.capacity_loss_coefficient = capacity_loss_coefficient
+        self.power_efficiency_curve = power_efficiency_curve
+        self.capacity_power_curve = capacity_power_curve
 
     def trade(self, energy: float):
         """Trade energy
