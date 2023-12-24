@@ -645,6 +645,8 @@ class Building(Environment):
 
     @trade_storage.setter
     def trade_storage(self, trade_storage: Battery):
+        if trade_storage:
+            print(trade_storage)
         self.__trade_storage = Battery(0.0, 0.0) if trade_storage is None else trade_storage
 
     @dhw_device.setter
@@ -1740,7 +1742,6 @@ class Building(Environment):
             pass
 
         net_trade_energy = self.trade_storage.trade_energy[self.time_step]
-        print(net_trade_energy)
 
         if net_trade_energy < 0.0:
             net_trade_earning = abs(net_trade_energy)*self.pricing.electricity_pricing[self.time_step]
