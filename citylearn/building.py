@@ -1573,6 +1573,22 @@ class Building(Environment):
         )
         self.electrical_storage.autosize(self.pv.get_generation(solar_generation), **kwargs)
 
+    def autosize_trade_storage(self, **kwargs):
+        """Autosize `electrical_storage` `capacity` to minimum capacity needed to store maximum `solar_generation`.
+        
+        Other Parameters
+        ----------------
+        **kwargs : dict
+            Other keyword arguments parsed to `electrical_storage` `autosize` function.
+        """
+
+        solar_generation = self.energy_simulation.__getattr__(
+            'solar_generation', 
+            start_time_step=self.episode_tracker.simulation_start_time_step, 
+            end_time_step=self.episode_tracker.simulation_end_time_step
+        )
+        self.trade_storage.autosize(self.pv.get_generation(solar_generation), **kwargs)
+
     def autosize_pv(self, **kwargs):
         """Autosize `PV` `nominal_pwer` to minimum nominal_power needed to output maximum `solar_generation`.
         
