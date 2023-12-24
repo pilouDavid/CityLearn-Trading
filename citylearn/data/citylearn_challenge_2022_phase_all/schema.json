@@ -213,6 +213,17 @@
           "nominal_power": 5.0
         }
       },
+      "trade_storage": {
+        "type": "citylearn.energy_model.TradingBattery",
+        "autosize": false,
+        "attributes": {
+          "capacity": 6.4,
+          "efficiency": 0.9,
+          "capacity_loss_coefficient": 1e-05,
+          "loss_coefficient": 0.0,
+          "nominal_power": 5.0
+        }
+      },
       "pv": {
         "type": "citylearn.energy_model.PV",
         "autosize": false,
@@ -231,6 +242,17 @@
       "inactive_actions": [],
       "electrical_storage": {
         "type": "citylearn.energy_model.Battery",
+        "autosize": false,
+        "attributes": {
+          "capacity": 6.4,
+          "efficiency": 0.9,
+          "capacity_loss_coefficient": 1e-05,
+          "loss_coefficient": 0.0,
+          "nominal_power": 5.0
+        }
+      },
+      "trade_storage": {
+        "type": "citylearn.energy_model.TradingBattery",
         "autosize": false,
         "attributes": {
           "capacity": 6.4,
@@ -366,6 +388,17 @@
       "inactive_actions": [],
       "electrical_storage": {
         "type": "citylearn.energy_model.Battery",
+        "autosize": false,
+        "attributes": {
+          "capacity": 6.4,
+          "efficiency": 0.9,
+          "capacity_loss_coefficient": 1e-05,
+          "loss_coefficient": 0.0,
+          "nominal_power": 5.0
+        }
+      },
+      "trade_storage": {
+        "type": "citylearn.energy_model.TradingBattery",
         "autosize": false,
         "attributes": {
           "capacity": 6.4,

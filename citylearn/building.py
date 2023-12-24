@@ -72,7 +72,7 @@ class Building(Environment):
         pricing: Pricing = None, dhw_storage: StorageTank = None, cooling_storage: StorageTank = None, heating_storage: StorageTank = None, electrical_storage: Battery = None, 
         dhw_device: Union[HeatPump, ElectricHeater] = None, cooling_device: HeatPump = None, heating_device: Union[HeatPump, ElectricHeater] = None, pv: PV = None, name: str = None,
         maximum_temperature_delta: float = None, simulate_power_outage: bool = None, stochastic_power_outage: bool = None, stochastic_power_outage_model: PowerOutage = None,
-        trade_storage: Battery = None, **kwargs: Any
+        trade_storage: TradingBattery = None, **kwargs: Any
         ):  
         self.name = name
         self.dhw_storage = dhw_storage
@@ -177,7 +177,7 @@ class Building(Environment):
         return self.__electrical_storage
     
     @property
-    def trade_storage(self) -> Battery:
+    def trade_storage(self) -> TradingBattery:
         """Trade storage object for meeting electric loads."""
 
         return self.__trade_storage
@@ -644,8 +644,8 @@ class Building(Environment):
         self.__electrical_storage = Battery(0.0, 0.0) if electrical_storage is None else electrical_storage
 
     @trade_storage.setter
-    def trade_storage(self, trade_storage: Battery):
-        self.__trade_storage = Battery(0.0, 0.0) if trade_storage is None else trade_storage
+    def trade_storage(self, trade_storage: TradingBattery):
+        self.__trade_storage = TradingBattery(0.0, 0.0) if trade_storage is None else trade_storage
 
     @dhw_device.setter
     def dhw_device(self, dhw_device: Union[HeatPump, ElectricHeater]):
@@ -1740,7 +1740,6 @@ class Building(Environment):
             pass
 
         net_trade_energy = self.trade_storage.trade_energy[self.time_step]
-        print(net_trade_energy)
 
         if net_trade_energy < 0.0:
             net_trade_earning = abs(net_trade_energy)*self.pricing.electricity_pricing[self.time_step]
