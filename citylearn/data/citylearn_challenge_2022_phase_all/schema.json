@@ -214,7 +214,7 @@
         }
       },
       "trade_storage": {
-        "type": "citylearn.energy_model.TradingBattery",
+        "type": "citylearn.energy_model.Battery",
         "autosize": false,
         "attributes": {
           "capacity": 6.4,
@@ -252,7 +252,7 @@
         }
       },
       "trade_storage": {
-        "type": "citylearn.energy_model.TradingBattery",
+        "type": "citylearn.energy_model.Battery",
         "autosize": false,
         "attributes": {
           "capacity": 6.4,
@@ -398,7 +398,7 @@
         }
       },
       "trade_storage": {
-        "type": "citylearn.energy_model.TradingBattery",
+        "type": "citylearn.energy_model.Battery",
         "autosize": false,
         "attributes": {
           "capacity": 6.4,
