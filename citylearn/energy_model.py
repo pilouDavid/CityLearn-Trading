@@ -890,7 +890,7 @@ class Battery(StorageDevice, ElectricDevice):
         super().charge(energy)
         degraded_capacity = max(self.degraded_capacity - self.degrade(), 0.0)
         self._capacity_history.append(degraded_capacity)
-        self.update_trade_energy(energy)
+        self.update_trade_energy(self.energy_balance[self.time_step])
 
     def get_max_output_power(self) -> float:
         r"""Get maximum output power while considering `capacity_power_curve` limitations if defined otherwise, returns `nominal_power`.
