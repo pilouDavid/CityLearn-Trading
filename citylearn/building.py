@@ -941,7 +941,7 @@ class Building(Environment):
             
             else:
                 pass
-        
+        print(priority_list)
         for k in priority_list:
             func, args = actions[k]
 
