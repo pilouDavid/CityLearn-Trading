@@ -841,7 +841,7 @@ class Battery(StorageDevice, ElectricDevice):
             'capacity_power_curve': self.capacity_power_curve,
         }
 
-    def charge(self, energy: float):
+    def charge(self, energy: float, is_trade: None):
         """Charges or discharges storage with respect to specified energy while considering `capacity` degradation and `soc_init` 
         limitations, losses to the environment quantified by `efficiency`, `power_efficiency_curve` and `capacity_power_curve`.
 
@@ -867,7 +867,10 @@ class Battery(StorageDevice, ElectricDevice):
         degraded_capacity = max(self.degraded_capacity - self.degrade(), 0.0)
         self._capacity_history.append(degraded_capacity)
         
-        self.update_electricity_consumption(self.energy_balance[self.time_step], enforce_polarity=False)
+        if not is_trade:
+            self.update_electricity_consumption(self.energy_balance[self.time_step], enforce_polarity=False)
+        else:
+            self.update_trade_energy(self.energy_balance[self.time_step])
 
     def trade(self, energy: float):
         """Trade energy
