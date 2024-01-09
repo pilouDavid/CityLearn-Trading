@@ -925,6 +925,11 @@ class Building(Environment):
             key = 'electrical_storage'
             priority_list.remove(key)
             priority_list = [key] + priority_list
+
+        if trade_storage_action < 0.0:
+            key = 'trade_power'
+            priority_list.remove(key)
+            priority_list = [key] + priority_list
         
         else:
             pass
@@ -941,7 +946,7 @@ class Building(Environment):
             
             else:
                 pass
-        print(priority_list)
+
         for k in priority_list:
             func, args = actions[k]
 
