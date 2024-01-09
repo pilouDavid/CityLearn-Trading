@@ -645,8 +645,6 @@ class Building(Environment):
 
     @trade_storage.setter
     def trade_storage(self, trade_storage: Battery):
-        if trade_storage:
-            print(trade_storage)
         self.__trade_storage = Battery(0.0, 0.0) if trade_storage is None else trade_storage
 
     @dhw_device.setter
