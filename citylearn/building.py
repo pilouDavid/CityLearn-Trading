@@ -922,9 +922,28 @@ class Building(Environment):
         priority_list = list(actions.keys())
 
         if electrical_storage_action < 0.0:
-            key = 'electrical_storage'
-            priority_list.remove(key)
-            priority_list = [key] + priority_list
+            elec_key = 'electrical_storage'
+            trade_key = 'trade_power'
+            priority_list.remove(trade_key)
+            priority_list.remove(elec_key)
+            priority_list = [elec_key] + priority_list 
+
+        elif electrical_storage_action > 0.0 and trade_storage_action > 0.0:
+            elec_key = 'electrical_storage'
+            trade_key = 'trade_power'
+            priority_list.remove(trade_key)
+            priority_list.remove(elec_key)
+            priority_list = [trade_key] + priority_list
+
+        elif electrical_storage_action == 0.0:
+            elec_key = 'electrical_storage'
+            trade_key = 'trade_power'
+            priority_list.remove(trade_key)
+            priority_list.remove(elec_key)
+            priority_list = [trade_key] + priority_list
+
+        else:
+            pass
 
         if trade_storage_action < 0.0:
             key = 'trade_power'

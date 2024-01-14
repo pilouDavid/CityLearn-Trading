@@ -870,7 +870,6 @@ class Battery(StorageDevice, ElectricDevice):
         if not is_trade:
             self.update_electricity_consumption(self.energy_balance[self.time_step], enforce_polarity=False)
         else:
-            print(self.energy_balance[self.time_step])
             self.update_trade_energy(self.energy_balance[self.time_step])
 
     def trade(self, energy: float):
