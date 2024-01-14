@@ -945,14 +945,6 @@ class Building(Environment):
         else:
             pass
 
-        if trade_storage_action < 0.0:
-            key = 'trade_power'
-            priority_list.remove(key)
-            priority_list = [key] + priority_list
-        
-        else:
-            pass
-
         for key in ['cooling', 'heating', 'dhw']:
             storage = f'{key}_storage'
             device = f'{key}_device'
