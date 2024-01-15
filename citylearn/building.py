@@ -935,6 +935,13 @@ class Building(Environment):
             priority_list.remove(elec_key)
             priority_list = [trade_key] + priority_list
 
+        elif trade_storage_action == 0.0:
+            elec_key = 'electrical_storage'
+            trade_key = 'trade_power'
+            priority_list.remove(trade_key)
+            priority_list.remove(elec_key)
+            priority_list = [elec_key] + priority_list
+
         elif electrical_storage_action == 0.0:
             elec_key = 'electrical_storage'
             trade_key = 'trade_power'
