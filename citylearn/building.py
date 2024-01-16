@@ -8,6 +8,7 @@ from citylearn.dynamics import Dynamics, LSTMDynamics
 from citylearn.energy_model import Battery, ElectricDevice, ElectricHeater, HeatPump, PV, StorageTank, TradingBattery
 from citylearn.power_outage import PowerOutage
 from citylearn.preprocessing import Normalize, PeriodicNormalization
+import random
 
 TOLERANCE = 0.0001
 ZERO_DIVISION_PLACEHOLDER = 0.000001
@@ -921,7 +922,7 @@ class Building(Environment):
         }
         priority_list = list(actions.keys())
 
-        if electrical_storage_action == 0.0:
+        if random.random() < 0.5:
             elec_key = 'electrical_storage'
             trade_key = 'trade_power'
             priority_list.remove(trade_key)
