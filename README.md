@@ -12,7 +12,7 @@ CityLearn includes energy models of buildings and distributed energy resources (
 ## Installation
 Install latest release in PyPi with `pip`:
 ```console
-pip install CityLearn
+pip install git+https://github.com/pilouDavid/CityLearn-Trading.git@main
 ```
 
 ## Documentation
@@ -28,6 +28,7 @@ This is composed of multiple steps ordered in increasing order of difficulty :
 * ✅ Allow CityLearn Environment to evaluate new trading behavior
 * ✅ Define new KPIs including new behavior (trade earning)
 * ✅ Derive new Reward function to make decisions sensible to power trade earnings
+* ✅ Set Prioritizing rules to choose between electrical storage action and trade action
 * ✅ Train RL model (SAC & Q-Learning) on new trade actions and observe improvements
 * ❌ Allow Building class to trade between each other
 * ❌ Transform Environment in order to share information about Buildings will to buy/sell power between each other
