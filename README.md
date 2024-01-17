@@ -22,7 +22,7 @@ Refer to the [docs](https://intelligent-environments-lab.github.io/CityLearn/) f
 The aim of this forked package is to allow power trading behavior for Buildings class. 
 This is composed of multiple steps ordered in increasing order of difficulty :
 
-* Understand CityLearn package
+* ✅ Understand CityLearn package
 * ✅ Allow Building class the action to trade with the grid (buy and sell power stored in Battery class)
 * ✅ Update Battery electricity storage when trading power
 * ✅ Allow CityLearn Environment to evaluate new trading behavior
