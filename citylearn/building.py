@@ -922,33 +922,6 @@ class Building(Environment):
         }
         priority_list = list(actions.keys())
 
-        if random.random() < 0.5:
-            elec_key = 'electrical_storage'
-            trade_key = 'trade_power'
-            priority_list.remove(trade_key)
-            priority_list.remove(elec_key)
-            priority_list = [trade_key] + priority_list
-
-        else:
-            elec_key = 'electrical_storage'
-            trade_key = 'trade_power'
-            priority_list.remove(trade_key)
-            priority_list.remove(elec_key)
-            priority_list = [elec_key] + priority_list    
-
-        for key in ['cooling', 'heating', 'dhw']:
-            storage = f'{key}_storage'
-            device = f'{key}_device'
-
-            if actions[storage][1][0] < 0.0:
-                storage_ix = priority_list.index(storage)
-                device_ix = priority_list.index(device)
-                priority_list[storage_ix] = device
-                priority_list[device_ix] = storage
-            
-            else:
-                pass
-
         for k in priority_list:
             func, args = actions[k]
 
