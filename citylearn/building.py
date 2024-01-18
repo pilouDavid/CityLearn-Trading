@@ -964,7 +964,7 @@ class Building(Environment):
 
         energy = min(action*self.electrical_storage.capacity, self.downward_electrical_flexibility)
 
-        self.electrical_storage.trade(energy)
+        self.trade_storage.trade(energy)
 
     def update_cooling_demand(self, action: float):
         """Update space cooling demand for current time step."""
@@ -1762,7 +1762,7 @@ class Building(Environment):
         else:
             pass
 
-        net_trade_energy = self.electrical_storage.trade_energy[self.time_step]
+        net_trade_energy = self.trade_storage.trade_energy[self.time_step]
 
         if net_trade_energy < 0.0:
             net_trade_earning = abs(net_trade_energy)*self.pricing.electricity_pricing[self.time_step]
