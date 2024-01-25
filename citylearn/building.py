@@ -939,17 +939,20 @@ class Building(Environment):
         if electrical_storage_action==0:
             elec_key = 'electrical_storage'
             trade_key = 'trade_power'
-            priority_list.remove(trade_key)
-            priority_list.remove(elec_key)
+            if priority_list[0] == 'trade_power':
+                priority_list.remove(trade_key)
+            if priority_list[0] == 'electrical_storage':
+                priority_list.remove(elec_key)  
             priority_list = [trade_key] + priority_list  
 
         if trade_storage_action==0:
-
             elec_key = 'electrical_storage'
             trade_key = 'trade_power'
-            priority_list.remove(trade_key)
-            priority_list.remove(elec_key)
-            priority_list = [elec_key] + priority_list      
+            if priority_list[0] == 'trade_power':
+                priority_list.remove(trade_key)
+            if priority_list[0] == 'electrical_storage':
+                priority_list.remove(elec_key)  
+            priority_list = [elec_key] + priority_list        
 
         for key in ['cooling', 'heating', 'dhw']:
             storage = f'{key}_storage'
